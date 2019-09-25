@@ -398,7 +398,30 @@ class Parser {
             '\\(' + stringGroup +
             '(?:[\\,]' + stringGroup + ')?' +
             '[\\,\\)]';
-        const re = new RegExp(pattern, 'gim');
+
+        const onStringGroup =
+          matchSpecialCharacters +
+          "(" +
+          // backtick (``)
+          "(?:[^`\\\\]|\\\\(?:.|$))*" +
+          ")" +
+          matchSpecialCharacters;
+
+        const onPattern =
+          "(?:(?:^\\s*)|[^a-zA-Z0-9_])" +
+          "(?:" +
+          matchFuncs +
+          ")" +
+          "\\`" +
+          onStringGroup +
+          "(?:[\\,]" +
+          onStringGroup +
+          ")?" +
+          "\\`";
+
+        console.log("check the pattern==>" + pattern);
+        console.log("check the pattern==>" + onPattern);            
+        const re = new RegExp(onPattern, "gim");
 
         let r;
         while ((r = re.exec(content))) {
